@@ -1,13 +1,37 @@
+import subprocess
+import sys
+import os
+
+# Function to install dependencies if not already installed
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# Function to check and install discord.py and requests
+def check_and_install_dependencies():
+    try:
+        import discord
+    except ImportError:
+        print("discord.py not found, installing...")
+        install("discord.py")
+
+    try:
+        import requests
+    except ImportError:
+        print("requests not found, installing...")
+        install("requests")
+
+# Ensure dependencies are installed before continuing
+check_and_install_dependencies()
+
+# Now proceed with importing the rest of the modules after installation
 import discord
 from discord.ext import commands
-import os
 import time
 import re
 import asyncio
-import requests  # Import requests to send webhooks
 
 # Configuration
-DISCORD_BOT_TOKEN = "MTMyMTA1MzM4MjMxMTU0MjgzNA.GwWC_W.WmT5v0Gx-w-ur5XDS--bYUNumFBxw0DvANT7KA"
+DISCORD_BOT_TOKEN = "MTMyMTA1MzM4MjMxMTU0MjgzNA.Gc2vvh.xZWpCwVl08RBKxhsbRHVXCzw6cqr_0FDxOPImA"
 WEBHOOK_ONLINE = "https://discord.com/api/webhooks/1321363206324883476/k5a_f6M4Y4NePdH4r-mmKODvZphqN_W6lAyuoehyROLjVZ4wufCaf7E-gKBmD61hM0mp"
 WEBHOOK_OFFLINE = "https://discord.com/api/webhooks/1321363318161674291/dwTv3tyQVx3C2iaLGR7kiTG2SOrLi4TWmGWxUVUv1o1nAl-KuPVXKktK9xjbabzQdMG8"
 WEBHOOK_DELETED_ACCOUNT = "https://discord.com/api/webhooks/1314394635170484244/gYKV3DPJYZ8LEgvHLMhy78P3h5ty1LrlROajD2np1xOVyRA-ILbSAVsm-qEWf4kV5bIT"
@@ -116,7 +140,7 @@ async def gen(ctx, stock: str):
             return
 
         with open(stock_file, "r") as file:
-            available_stocks = [line.strip() for line in file if line.strip()]
+            available_stocks = [line.strip() for line in file if line.strip()]  # Remove empty lines
 
         if not available_stocks:
             await ctx.reply(embed=make_error_embed(f"No available accounts in `{stock}.txt`.")) 
@@ -224,3 +248,4 @@ def make_error_embed(error):
 
 # Run the bot
 bot.run(DISCORD_BOT_TOKEN)
+    
